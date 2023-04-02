@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+
+  userId Int?  @unique
+  user   User?
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  email  String     @unique
+  name   String?
+  status UserStatus @default(INACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accountId Int?     @unique
+  account   Account? @relation(fields: [accountId], references: [id])
+
+  roleId Int?
+  role   Role? @relation(fields: [roleId], references: [id])
+
+  token Token?
+}
+
+model Token {
+  id Int @id @default(autoincrement())
+
+  token     String   @db.Text
+  hashToken String
+  createdAt DateTime @default(now())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique
+  description String?
+
+  users       User[]
+  permissions Permission[]
+}
+
+model Permission {
+  id Int @id @default(autoincrement())
+
+  action   PermissionAction
+  resource PermissionResource
+
+  roles Role[]
+}
+
+model File {
+  id         String @id @default(uuid())
+  contenType String
+  buffer     Bytes
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
+enum PermissionResource {
+  USER
+  ROLE
+}
+
+enum PermissionAction {
+  C
+  R
+  U
+  D
+  CP
+  RP
+  UP
+  DP
+}

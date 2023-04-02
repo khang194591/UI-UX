@@ -1,0 +1,4 @@
+- Thứ tự trong file types:
+  - enum
+  - interface
+  - dto interface (extends yup)
