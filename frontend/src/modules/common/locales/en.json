@@ -1,0 +1,11 @@
+{
+  "page": {
+    "home": { "label": "Home", "name": "Home" },
+    "user": { "label": "User", "name": "User" },
+    "contract": { "label": "Contract", "name": "Contract" }
+  },
+  "lang": {
+    "en": "English",
+    "vi": "Vietnamese"
+  }
+}

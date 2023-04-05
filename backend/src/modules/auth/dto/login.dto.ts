@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { INPUT_MAX_LENGTH, SECURITY_PATTERN } from '../../../common/constants';
-import Joi from 'joi';
+import joi from 'src/plugins/joi';
 
-export const LoginSchema = Joi.object({
-  email: Joi.string().email().max(INPUT_MAX_LENGTH).required(),
-  password: Joi.string().regex(SECURITY_PATTERN).required(),
+export const LoginSchema = joi.object({
+  email: joi.string().email().max(INPUT_MAX_LENGTH).required(),
+  password: joi.string().regex(SECURITY_PATTERN).required(),
 });
 
 export class LoginDto {

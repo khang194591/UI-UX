@@ -5,6 +5,9 @@ import { Account, User } from '@prisma/client';
 import EnvKey from 'src/common/configs/env';
 import { generateHashToken } from 'src/common/helpers';
 import { DatabaseService } from 'src/common/services/database.service';
+import { LoginDto } from './dto/login.dto';
+import { UserService } from '../user/user.service';
+import { compareSync } from 'bcrypt';
 
 export interface IToken {
   token: string;
@@ -19,41 +22,20 @@ export class AuthService {
     private readonly db: DatabaseService,
   ) {}
 
-  async getByEmail(email: string): Promise<Account | null> {
-    try {
-      const account = await this.db.account.findUnique({ where: { email } });
+  async validateUser(data: LoginDto) {
+    const { email, password } = data;
+    const account = await this.db.account.findUnique({ where: { email } });
+    if (account && compareSync(password, account.password)) {
+      return true;
+    } else {
       return account;
-    } catch (error) {
-      throw error;
     }
   }
 
-  async login(
-    email: string,
-  ): Promise<{ user: User; accessToken: IToken; refreshToken: IToken }> {
+  async login(account: Account) {
     try {
-      const user = await this.db.user.findUnique({
-        where: { email },
-        include: {},
-      });
-      const accessToken = this.generateAccessToken(user);
-      const hashToken = generateHashToken(user.id);
-      const refreshToken = this.generateRefreshToken(user, hashToken);
-
-      // Logout other logging user
-      try {
-        await this.db.token.delete({ where: { userId: user.id } });
-      } catch (error) {}
-
-      await this.db.token.create({
-        data: {
-          token: refreshToken.token,
-          hashToken,
-          userId: user.id,
-        },
-      });
-
-      return { user, accessToken, refreshToken };
+      const payload = { username: account.email, sub: account.id };
+      return this.jwtService.sign(payload);
     } catch (error) {
       console.log(error);
       throw error;

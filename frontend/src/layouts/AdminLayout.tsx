@@ -1,13 +1,13 @@
 import { Box, Stack } from '@mui/material'
 import { Outlet } from 'react-router-dom'
-import Header from './components/Header'
+import Header from './components/header/Header'
 import Navbar from './components/navbar/Navbar'
 import { useEffect } from 'react'
 import { useAppDispatch } from '../store/hooks'
 import client from '../plugins/axios'
-import { setPermission, setRoleData } from '../modules/roles/role.store'
-import { IListResponse } from '../common/types'
-import { IPermission, IRole } from '../modules/roles/role.types'
+import { setPermission, setRoleData } from '../modules/role/role.store'
+import { IListResponse } from '../modules/common/types'
+import { IPermission, IRole } from '../modules/role/role.types'
 
 function AdminLayout() {
   const dispatch = useAppDispatch()

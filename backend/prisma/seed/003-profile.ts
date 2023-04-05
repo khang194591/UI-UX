@@ -11,6 +11,11 @@ const seedUser = async () => {
         data: {
           email: faker.internet.email(),
           name: faker.name.fullName(),
+          role: {
+            connect: {
+              name: 'user',
+            },
+          },
         },
       });
     }

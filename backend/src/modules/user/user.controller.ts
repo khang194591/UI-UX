@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpStatus,
   InternalServerErrorException,
   NotFoundException,
   Param,
@@ -12,14 +11,13 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   Res,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PermissionAction, PermissionResource } from '@prisma/client';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { BEARER } from 'src/common/constants';
 import {
   AuthorizationGuard,
@@ -35,13 +33,13 @@ import { UpdateUserDto, UpdateUserSchema } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
 @Controller('users')
-// @UseGuards(JwtGuard, AuthorizationGuard)
+@UseGuards(JwtGuard, AuthorizationGuard)
 @ApiTags('users')
-// @ApiBearerAuth(BEARER)
+@ApiBearerAuth(BEARER)
 export class UserController {
   constructor(
-    private readonly userService: UserService,
     private readonly db: DatabaseService,
+    private readonly userService: UserService,
   ) {}
 
   @Get()
@@ -61,7 +59,6 @@ export class UserController {
         },
       });
       const count = await this.db.user.count();
-      res.setHeader('X-Total-Count', String(count));
       return res.json({
         items: users,
         totalItems: count,
@@ -88,7 +85,7 @@ export class UserController {
   @Post()
   @PermissionsData(`${PermissionResource.USER}-${PermissionAction.C}`)
   @UsePipes(new JoiValidationPipe(CreateUserSchema))
-  async create(@Req() req: Request, @Body() body: CreateUserDto) {
+  async create(@Body() body: CreateUserDto) {
     try {
       const user = await this.db.user.findUnique({
         where: { email: body.email },
@@ -120,7 +117,7 @@ export class UserController {
 
   @Delete(':id')
   @PermissionsData(`${PermissionResource.USER}-${PermissionAction.D}`)
-  async delete(@Req() req: Request, @Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     try {
       const deleteItem = await this.userService.deleteById(id);
       return deleteItem;

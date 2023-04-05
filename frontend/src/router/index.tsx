@@ -1,8 +1,18 @@
-import { createBrowserRouter } from 'react-router-dom'
-import AdminLayout from '../layouts/AdminLayout'
-import { userRouter } from '../modules/users'
-import { roleRouter } from '../modules/roles'
-import MainLayout from '../layouts/MainLayout'
+import AdminLayout from '@/layouts/AdminLayout'
+import MainLayout from '@/layouts/MainLayout'
+import authRouter from '@/modules/auth/auth.router'
+import lodash from 'lodash'
+import { RouteObject, createBrowserRouter } from 'react-router-dom'
+import { modulesRoutes } from './utils'
+
+let normalRoutes: RouteObject[] = []
+
+lodash.forEach(modulesRoutes, (module, key) => {
+  if (key === 'auth') return
+  normalRoutes = lodash.concat(normalRoutes, module as RouteObject[])
+})
+
+console.log(modulesRoutes)
 
 const router = createBrowserRouter([
   {
@@ -12,10 +22,13 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <AdminLayout />,
-        children: [userRouter, roleRouter],
+        children: normalRoutes,
       },
     ],
   },
+  authRouter,
 ])
+
+console.log(router.routes)
 
 export default router

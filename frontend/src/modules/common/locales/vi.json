@@ -1,0 +1,11 @@
+{
+  "page": {
+    "home": { "label": "Trang chủ", "name": "Trang chủ" },
+    "user": { "label": "Người dùng", "name": "Người dùng" },
+    "contract": { "label": "Hợp đồng", "name": "Hợp đồng" }
+  },
+  "lang": {
+    "en": "Tiếng Anh",
+    "vi": "Tiếng Việt"
+  }
+}

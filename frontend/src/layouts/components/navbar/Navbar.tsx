@@ -1,53 +1,16 @@
 import { Box, Icon, Stack } from '@mui/material'
-import { blueGrey } from '@mui/material/colors'
 import { useState } from 'react'
-import {
-  MdChevronLeft,
-  MdOutlineBadge,
-  MdOutlineHome,
-  MdOutlineSecurity,
-} from 'react-icons/md'
-import { PageName, mapLinkName } from '../../../common/utils'
-import NavbarItem from './NavbarItem'
-import { useToast } from '@/store/slides/toast'
-import { useConfirmation } from '@/store/slides/confirmation'
+import { MdChevronLeft } from 'react-icons/md'
 
-const navbarItems = [
-  {
-    to: mapLinkName[PageName.DASHBOARD].absolutePath,
-    label: 'Home',
-    icon: MdOutlineHome,
-  },
-  {
-    to: mapLinkName[PageName.USER].absolutePath,
-    label: 'User',
-    icon: MdOutlineBadge,
-  },
-  {
-    to: mapLinkName[PageName.ROLE].absolutePath,
-    label: 'Role',
-    icon: MdOutlineSecurity,
-  },
-]
+import { pages } from '@/data/pages'
+
+import NavbarItem from './NavbarItem'
 
 function Navbar() {
-  const toast = useToast()
-  const { isOpen, ok, cancel, open } = useConfirmation()
   const [collapsed, setCollapsed] = useState(false)
 
   async function toggleCollapsed() {
-    // toast({
-    //   open: true,
-    //   message: 'Collapsed',
-    // })
-
-    const isConfirm = await open({
-      title: 'Confirm',
-      content: 'Collapsed',
-    })
-    if (isConfirm) {
-      setCollapsed(!collapsed)
-    }
+    setCollapsed(!collapsed)
   }
 
   return (
@@ -56,15 +19,13 @@ function Navbar() {
         position: 'relative',
         height: '100%',
         width: collapsed ? '88px' : '240px',
-        borderRightWidth: 2,
-        borderRightStyle: 'dashed',
-        borderRightColor: blueGrey[500],
         padding: 2,
-        transition: 'all 0.5s ease-out',
+        borderRight: '2px solid',
+        transition: 'width 0.5s ease-out',
       }}
     >
       <Stack direction={'column'} gap={1}>
-        {navbarItems.map((item) => (
+        {pages.map((item) => (
           <NavbarItem collapsed={collapsed} {...item} key={item.label} />
         ))}
       </Stack>
@@ -74,11 +35,8 @@ function Navbar() {
         sx={{
           position: 'absolute',
           bottom: 12,
-          right: -15,
-          borderRadius: '9999px',
-          borderColor: blueGrey[500],
-          borderWidth: 2,
-          borderStyle: 'dashed',
+          right: -16,
+          border: '2px solid',
           padding: 0.5,
           bgcolor: 'white',
         }}

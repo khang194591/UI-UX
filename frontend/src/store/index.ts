@@ -1,7 +1,6 @@
 import { Store, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import roleReducer from '../modules/roles/role.store'
-import userReducer from '../modules/users/user.store'
-import confirmationReducer from './slides/confirmation'
+import roleReducer from '../modules/role/role.store'
+import userReducer from '../modules/user/user.store'
 import toastReducer from './slides/toast'
 export interface ThunkExtraArguments {
   store: Store
@@ -21,7 +20,6 @@ function createStore() {
       role: roleReducer,
       user: userReducer,
       toast: toastReducer,
-      confirmation: confirmationReducer,
     },
     middleware: customizedMiddleware,
   })

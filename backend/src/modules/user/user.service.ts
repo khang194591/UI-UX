@@ -37,6 +37,18 @@ export class UserService {
     }
   }
 
+  async getByEmail(email: string): Promise<User> {
+    try {
+      const user = await this.db.user.findUnique({
+        where: { email },
+        include: { role: true },
+      });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async create(data: CreateUserDto): Promise<User> {
     try {
       const newItem = await this.db.user.create({

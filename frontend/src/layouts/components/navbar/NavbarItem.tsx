@@ -8,6 +8,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { blue, blueGrey, grey } from '@mui/material/colors'
+import { useTranslation } from 'react-i18next'
 import { IconType } from 'react-icons'
 import { NavLink } from 'react-router-dom'
 
@@ -20,11 +21,13 @@ type Props = {
 
 function NavbarItem({ to, label, collapsed, icon }: Props) {
   const theme = useTheme()
+  const { t } = useTranslation('common')
+
   return (
     <NavLink to={to} style={{ textDecoration: 'none' }} end>
       {({ isActive }) => (
         <Tooltip
-          title={label}
+          title={t(label)}
           disableHoverListener={!collapsed}
           placement="right"
         >
@@ -35,16 +38,29 @@ function NavbarItem({ to, label, collapsed, icon }: Props) {
             sx={{
               padding: 2,
               borderRadius: 1,
-              bgcolor: isActive ? blue[50] : 'inherit',
-              color: isActive ? theme.palette.primary.main : blueGrey[500],
+              bgcolor: isActive
+                ? theme.palette.primary.main.concat('33')
+                : 'inherit',
+              color: isActive
+                ? theme.palette.primary.main
+                : theme.palette.grey[500],
               ':hover': {
-                bgcolor: isActive ? '' : blueGrey[50],
-                color: isActive ? '' : blueGrey[700],
+                bgcolor: isActive ? '' : theme.palette.grey[200],
+                color: isActive ? '' : theme.palette.grey[700],
               },
             }}
           >
             <Icon component={icon} />
-            {!collapsed && <Typography fontWeight={700}>{label}</Typography>}
+            <Typography
+              noWrap
+              fontWeight={700}
+              sx={{
+                opacity: collapsed ? 0 : 1,
+                transition: 'opacity 0.5s ease-out',
+              }}
+            >
+              {t(label)}
+            </Typography>
           </Stack>
         </Tooltip>
       )}
